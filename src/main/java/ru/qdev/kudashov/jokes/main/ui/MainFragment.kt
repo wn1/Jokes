@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.trello.rxlifecycle3.android.lifecycle.kotlin.bindToLifecycle
 import com.trello.rxlifecycle3.components.support.RxFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -32,11 +33,12 @@ class MainFragment : RxFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        floatingActionButton.clicks().compose(bindToLifecycle()).subscribe {
+        floatingActionButton.clicks().subscribe {
             val newJoke = viewModel.getNewJoke()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .delaySubscription(2000, TimeUnit.MILLISECONDS)
+                .bindToLifecycle(this)
 
             newJoke
                 .filter {it.result?.error == 0}
