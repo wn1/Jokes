@@ -1,2 +1,2 @@
 # Jokes
-Jokes and anegdotes
+Jokes and anecdotes
