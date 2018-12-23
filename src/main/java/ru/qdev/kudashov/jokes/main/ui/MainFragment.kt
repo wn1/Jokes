@@ -1,5 +1,6 @@
 package ru.qdev.kudashov.jokes.main.ui
 
+import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,8 +10,11 @@ import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import com.trello.rxlifecycle3.components.support.RxFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.main_fragment.*
+import ru.qdev.kudashov.jokes.AnecdoticaRuService
 import ru.qdev.kudashov.jokes.R
+import java.util.*
 
 class MainFragment : RxFragment() {
 
@@ -31,10 +35,22 @@ class MainFragment : RxFragment() {
         super.onViewCreated(view, savedInstanceState)
         floatingActionButton.clicks().compose(bindToLifecycle()).subscribe {
             viewModel.getNewJoke()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter {it.result?.error == 0}
-                .subscribe { contentView.text = it.item?.text }
+//                .filter {it.result?.error == 0}
+//                .subscribe (::onJokeResponse, ::onErrorResponse)
         }
+    }
+
+
+    fun onJokeResponse(jokeResponse: AnecdoticaRuService.JokeResponse){
+        contentView.text = jokeResponse.item?.text
+    }
+
+    fun onErrorResponse(throwable: Throwable) {
+        AlertDialog.Builder(context)
+            .setNegativeButton("Ошибка: ${throwable.localizedMessage}", null)
+            .show()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
