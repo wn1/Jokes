@@ -5,6 +5,7 @@ import retrofit2.http.GET
 import retrofit2.Retrofit
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Call
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import rx.schedulers.Schedulers
@@ -52,4 +53,7 @@ interface AnecdoticaRuService {
 
     @GET("api?pid=221122&method=getRandItem&format=json&charset=utf-8&")
     fun randomJoke() : Observable<JokeResponse>
+
+    @GET("api?pid=221122&method=getRandItem&format=json&charset=utf-8&")
+    fun randomJokeCall() : Call<JokeResponse>
 }

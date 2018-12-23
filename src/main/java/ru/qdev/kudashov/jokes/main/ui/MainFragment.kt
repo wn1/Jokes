@@ -38,7 +38,7 @@ class MainFragment : RxFragment() {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
 //                .filter {it.result?.error == 0}
-//                .subscribe (::onJokeResponse, ::onErrorResponse)
+                .subscribe (::onJokeResponse, ::onErrorResponse)
         }
     }
 
