@@ -4,33 +4,30 @@ import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import ru.qdev.kudashov.jokes.AnecdoticaRuService
+import ru.qdev.kudashov.jokes.UmoriliService
 
 class JokeRepository {
-    var jokeObservable: Observable<AnecdoticaRuService.JokeResponse>? = null
+    var jokeObservable: Observable<UmoriliService.JokeResponse>? = null
 
-    fun getNewJoke() : Observable<AnecdoticaRuService.JokeResponse> {
+    fun getNewJoke() : Observable<UmoriliService.JokeResponse> {
+
+//        jokeObservable = Observable.defer({
         jokeObservable = Observable.create {
-//            Observable.defer({
-                AnecdoticaRuService.create().randomJokeCall().enqueue( object : Callback<AnecdoticaRuService.JokeResponse> {
-                    override fun onFailure(call: Call<AnecdoticaRuService.JokeResponse>, t: Throwable) {
-                        it.onError(t)
-                    }
-
-                    override fun onResponse(
-                        call: Call<AnecdoticaRuService.JokeResponse>,
-                        response: Response<AnecdoticaRuService.JokeResponse>
-                    ) {
-                        it.onNext(response.body()!!)
-                    }
+            UmoriliService.create().randomJokeCall().enqueue(object : Callback<UmoriliService.JokeResponse> {
+                override fun onFailure(call: Call<UmoriliService.JokeResponse>, t: Throwable) {
+                    it.onError(t)
                 }
-                )
-//            }
-        }
-        return jokeObservable!!
 
-//        jokeObservable = AnecdoticaRuService.create().randomJoke()
-//        return jokeObservable!!
+                override fun onResponse(
+                    call: Call<UmoriliService.JokeResponse>,
+                    response: Response<UmoriliService.JokeResponse>
+                ) {
+                    it.onNext(response.body()!!)
+                }
+            })
+        }
+//    }
+        return jokeObservable!!
     }
 
 }

@@ -2,7 +2,7 @@ package ru.qdev.kudashov.jokes.main.ui
 
 import androidx.lifecycle.ViewModel
 import io.reactivex.Observable
-import ru.qdev.kudashov.jokes.AnecdoticaRuService.*
+import ru.qdev.kudashov.jokes.UmoriliService.*
 
 class MainViewModel : ViewModel() {
     val jokeRepository: JokeRepository = JokeRepository()

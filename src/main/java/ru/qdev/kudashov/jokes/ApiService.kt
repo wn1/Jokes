@@ -10,13 +10,12 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import rx.schedulers.Schedulers
 
-
-interface AnecdoticaRuService {
+interface UmoriliService {
     companion object {
         val baseUrl: String
-            get() = "http://anecdotica.ru/"
+            get() = "http://umorili.herokuapp.com/api/"
 
-        fun create() : AnecdoticaRuService {
+        fun create() : UmoriliService {
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(
                     HttpLoggingInterceptor()
@@ -32,28 +31,23 @@ interface AnecdoticaRuService {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
-            return retrofit.create(AnecdoticaRuService::class.java)
+            return retrofit.create(UmoriliService::class.java)
         }
     }
 
-    class Result {
-        var error: Int = -1
-        var errMsg: String = ""
-    }
-
     class Joke {
-        var text: String = ""
-        var note: String = ""
+        var site: String = ""
+        var name: String = ""
+        var desc: String = ""
+        var link: String = ""
+        var elementPureHtml: String = ""
     }
 
-    class JokeResponse {
-        var result: Result? = null
-        var item: Joke? = null
-    }
+    class JokeResponse : ArrayList<Joke>()
 
-    @GET("api?pid=221122&method=getRandItem&format=json&charset=utf-8&")
+    @GET("random?num=1")
     fun randomJoke() : Observable<JokeResponse>
 
-    @GET("api?pid=221122&method=getRandItem&format=json&charset=utf-8&")
+    @GET("random?num=1")
     fun randomJokeCall() : Call<JokeResponse>
 }
