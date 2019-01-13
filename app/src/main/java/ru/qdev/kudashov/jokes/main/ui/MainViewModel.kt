@@ -27,7 +27,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = SpannableString ("И это будет что-то!")
 
     val jokeContent = MutableLiveData<Spanned> (jokeContentEmpty)
-    var lastJoke: Joke? = null
+    private var lastJoke: Joke? = null
     private var newJokeDisposable: Disposable? = null
 
     var updateInProgressCallback = object : Observable.OnPropertyChangedCallback() {
@@ -40,9 +40,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         jokeRepository.updateInProgress.addOnPropertyChangedCallback(updateInProgressCallback)
+
+        val newJoke = getNewJoke()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+        newJokeDisposable = newJoke
+            .subscribe (::onJokeResponse, ::onErrorResponse)
     }
 
     override fun onCleared() {
+        newJokeDisposable?.dispose()
+
         jokeRepository.updateInProgress.removeOnPropertyChangedCallback(updateInProgressCallback)
         super.onCleared()
     }
@@ -55,29 +63,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (lastJoke!=null) {
             jokeRepository.setJokeIsReaded(lastJoke!!)
         }
-        val newJoke = getNewJoke()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-
-        if (newJokeDisposable!=null) {
-            newJokeDisposable!!.dispose()
-        }
-        newJokeDisposable = newJoke
-                .subscribe (::onJokeResponse, ::onErrorResponse)
     }
 
     private fun onJokeResponse(jokeList: JokeList) {
         lastJoke = jokeList.firstOrNull()
         if (lastJoke == null) {
-//            jokeRepository.updateLocal()
+            jokeRepository.updateLocal()
         }
 
-        val contentPureHtml = lastJoke?.content ?: "<p>Пока нет.</p><p>Мы уже что-то придумаваем, приходите ещё )</p>"
+        if (!jokeRepository.updateInProgress.get()) { //ToDo to progress indicator change
+            val contentPureHtml =
+                lastJoke?.content ?: "<p>Пока нет.</p><p>Мы уже что-то придумаваем, приходите ещё )</p>"
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            jokeContent.postValue(Html.fromHtml(contentPureHtml, Html.FROM_HTML_MODE_COMPACT))
-        } else {
-            jokeContent.postValue(Html.fromHtml(contentPureHtml))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                jokeContent.postValue(Html.fromHtml(contentPureHtml, Html.FROM_HTML_MODE_COMPACT))
+            } else {
+                jokeContent.postValue(Html.fromHtml(contentPureHtml))
+            }
         }
     }
 

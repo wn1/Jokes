@@ -39,7 +39,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" android:gravity="center" android:layout_margin="10dp"
                         android:layout_gravity="center"
-                        android:text="@{jokeViewModel.jokeContent}"/>
+                        android:text="@{jokeViewModel.jokeContent}" android:textIsSelectable="true"/>
             </LinearLayout>
         </ScrollView>
 

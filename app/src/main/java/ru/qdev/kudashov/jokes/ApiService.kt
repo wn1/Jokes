@@ -37,11 +37,11 @@ interface UmoriliService {
     }
 
     class Joke {
-        var site: String = ""
-        var name: String = ""
-        var desc: String = ""
-        var link: String = ""
-        var elementPureHtml: String = ""
+        var site: String? = ""
+        var name: String? = ""
+        var desc: String? = ""
+        var link: String? = ""
+        var elementPureHtml: String? = ""
     }
 
     class JokeResponse : ArrayList<Joke>()
@@ -49,6 +49,6 @@ interface UmoriliService {
     @GET("random?num={count}")
     fun randomJoke(count: Int) : Observable<JokeResponse>
 
-    @GET("random?num={count}")
-    fun randomJokeCall(@Path("count") count: Int) : Call<JokeResponse>
+    @GET("random?num=5")
+    fun randomJokeCall() : Call<JokeResponse>
 }

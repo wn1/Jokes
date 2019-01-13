@@ -19,7 +19,7 @@ abstract class JokeDb : RoomDatabase() {
 
 @Entity
 class Joke {
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Long = 0
     var content: String = ""
     var dateUTC: Long = 0
