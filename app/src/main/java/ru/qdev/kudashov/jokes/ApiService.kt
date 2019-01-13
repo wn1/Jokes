@@ -8,6 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Path
 import rx.schedulers.Schedulers
 
 interface UmoriliService {
@@ -45,9 +46,9 @@ interface UmoriliService {
 
     class JokeResponse : ArrayList<Joke>()
 
-    @GET("random?num=1")
-    fun randomJoke() : Observable<JokeResponse>
+    @GET("random?num={count}")
+    fun randomJoke(count: Int) : Observable<JokeResponse>
 
-    @GET("random?num=1")
-    fun randomJokeCall() : Call<JokeResponse>
+    @GET("random?num={count}")
+    fun randomJokeCall(@Path("count") count: Int) : Call<JokeResponse>
 }

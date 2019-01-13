@@ -1,12 +1,88 @@
 package ru.qdev.kudashov.jokes.main.ui
 
-import androidx.lifecycle.ViewModel
-import io.reactivex.Observable
-import ru.qdev.kudashov.jokes.UmoriliService.*
+import android.app.Application
+import android.os.Build
+import android.text.Html
+import android.text.SpannableString
+import android.text.Spanned
+import android.view.View
+import androidx.databinding.Observable
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
+import ru.qdev.kudashov.jokes.AlertMessage
+import ru.qdev.kudashov.jokes.db.Joke
+import ru.qdev.kudashov.jokes.db.JokeList
 
-class MainViewModel : ViewModel() {
-    val jokeRepository: JokeRepository = JokeRepository()
-    fun getNewJoke() : Observable<JokeResponse> {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    val alertObservable : PublishSubject<AlertMessage> = PublishSubject.create()
+
+    private val jokeRepository: JokeRepository = JokeRepository(application)
+
+    private val jokeContentEmpty : Spanned
+        get() = SpannableString ("И это будет что-то!")
+
+    val jokeContent = MutableLiveData<Spanned> (jokeContentEmpty)
+    var lastJoke: Joke? = null
+    private var newJokeDisposable: Disposable? = null
+
+    var updateInProgressCallback = object : Observable.OnPropertyChangedCallback() {
+        override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
+            if (jokeRepository.updateInProgress.get()) {
+                jokeContent.postValue(SpannableString("Ищу что-то интересненькое..."))
+            }
+        }
+    }
+
+    init {
+        jokeRepository.updateInProgress.addOnPropertyChangedCallback(updateInProgressCallback)
+    }
+
+    override fun onCleared() {
+        jokeRepository.updateInProgress.removeOnPropertyChangedCallback(updateInProgressCallback)
+        super.onCleared()
+    }
+
+    fun getNewJoke() : Flowable<JokeList> {
         return jokeRepository.getNewJoke()
+    }
+
+    fun onClickFloatingActionButton(view: View) {
+        if (lastJoke!=null) {
+            jokeRepository.setJokeIsReaded(lastJoke!!)
+        }
+        val newJoke = getNewJoke()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+
+        if (newJokeDisposable!=null) {
+            newJokeDisposable!!.dispose()
+        }
+        newJokeDisposable = newJoke
+                .subscribe (::onJokeResponse, ::onErrorResponse)
+    }
+
+    private fun onJokeResponse(jokeList: JokeList) {
+        lastJoke = jokeList.firstOrNull()
+        if (lastJoke == null) {
+//            jokeRepository.updateLocal()
+        }
+
+        val contentPureHtml = lastJoke?.content ?: "<p>Пока нет.</p><p>Мы уже что-то придумаваем, приходите ещё )</p>"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            jokeContent.postValue(Html.fromHtml(contentPureHtml, Html.FROM_HTML_MODE_COMPACT))
+        } else {
+            jokeContent.postValue(Html.fromHtml(contentPureHtml))
+        }
+    }
+
+    private fun onErrorResponse(throwable: Throwable) {
+        jokeContent.postValue(jokeContentEmpty)
+        alertObservable.onNext (AlertMessage("Ошибка: ${throwable.localizedMessage}", throwable))
     }
 }
