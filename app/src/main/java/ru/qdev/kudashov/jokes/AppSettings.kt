@@ -7,5 +7,7 @@ class AppSettings {
         val minHourForNotifycation = 10
         val maxHourForNotifycation = 20
         val notificationCountOnDay = 4
+        val removeJokeAfterMonthCount = 2
+        val fullAgeWord = "" //TODO
     }
 }

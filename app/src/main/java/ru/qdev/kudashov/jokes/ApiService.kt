@@ -49,6 +49,6 @@ interface UmoriliService {
     @GET("random?num={count}")
     fun randomJoke(count: Int) : Observable<JokeResponse>
 
-    @GET("random?num=5")
+    @GET("random?num=10")
     fun randomJokeCall() : Call<JokeResponse>
 }

@@ -38,11 +38,23 @@ interface JokeDao {
     @Query("SELECT * FROM joke WHERE dateUTC = (SELECT max(dateUTC) FROM joke) AND NOT isReading LIMIT 1")
     fun getLastUnreadJoke() : Flowable<JokeList> //JokeList to maybe return empty result
 
+    @Query("SELECT * FROM joke WHERE nonUniqueId = :nonUniqueID AND content = :content LIMIT 1")
+    fun getRepeatJoke(nonUniqueID: String, content: String) : JokeList //JokeList to maybe return empty result
+
     @Insert
     fun insert(joke: Joke)
 
-    @Insert
+    @Insert()
     fun insert(jokes: List<Joke>)
+
+    @Transaction
+    fun insertNew(jokes: List<Joke>) {
+        for (joke in jokes) {
+            if (getRepeatJoke(joke.nonUniqueId, joke.content).isEmpty()) {
+                insert(joke)
+            }
+        }
+    }
 
     @Update
     fun update(joke: Joke)

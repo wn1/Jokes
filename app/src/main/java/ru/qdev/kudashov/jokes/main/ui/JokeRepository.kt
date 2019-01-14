@@ -54,7 +54,7 @@ class JokeRepository(val context: Context) {
                     if (response.body() != null) {
                         AsyncTask.execute {
                             val jokes = response.body()!!.map { it.toDb() }
-                            jokeDbDao.insert(jokes)
+                            jokeDbDao.insertNew(jokes)
                         }
                     }
                 }
