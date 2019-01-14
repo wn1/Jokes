@@ -30,10 +30,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var lastJoke: Joke? = null
     private var newJokeDisposable: Disposable? = null
 
-    var updateInProgressCallback = object : Observable.OnPropertyChangedCallback() {
+    private var updateInProgressCallback = object : Observable.OnPropertyChangedCallback() {
         override fun onPropertyChanged(sender: Observable?, propertyId: Int) {
             if (jokeRepository.updateInProgress.get()) {
                 jokeContent.postValue(SpannableString("Ищу что-то интересненькое..."))
+            }
+            else
+            {
+                setContent(lastJoke?.content)
             }
         }
     }
@@ -63,6 +67,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (lastJoke!=null) {
             jokeRepository.setJokeIsReaded(lastJoke!!)
         }
+        else{
+            jokeRepository.updateLocal()
+        }
+    }
+
+    private fun setContent(content: String?) {
+        val contentPureHtml =
+            content ?: "<p>Пока нет.</p><p>Мы уже что-то придумаваем, приходите ещё )</p>"
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            jokeContent.postValue(Html.fromHtml(contentPureHtml, Html.FROM_HTML_MODE_COMPACT))
+        } else {
+            jokeContent.postValue(Html.fromHtml(contentPureHtml))
+        }
     }
 
     private fun onJokeResponse(jokeList: JokeList) {
@@ -72,14 +90,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         if (!jokeRepository.updateInProgress.get()) { //ToDo to progress indicator change
-            val contentPureHtml =
-                lastJoke?.content ?: "<p>Пока нет.</p><p>Мы уже что-то придумаваем, приходите ещё )</p>"
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                jokeContent.postValue(Html.fromHtml(contentPureHtml, Html.FROM_HTML_MODE_COMPACT))
-            } else {
-                jokeContent.postValue(Html.fromHtml(contentPureHtml))
-            }
+            setContent(lastJoke?.content)
         }
     }
 
