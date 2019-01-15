@@ -13,14 +13,17 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import ru.qdev.kudashov.jokes.AlertMessage
+import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
 import ru.qdev.kudashov.jokes.db.Joke
 import ru.qdev.kudashov.jokes.db.JokeList
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-    val alertObservable : PublishSubject<AlertMessage> = PublishSubject.create()
+interface MainViewSubscriber {
+    fun alertMessage (alertMessage : AlertMessage)
+}
 
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    val viewSubscribers = WeakSubscriberArray<MainViewSubscriber>()
     private val jokeRepository: JokeRepository = JokeRepository(application)
 
     private val jokeContentEmpty : Spanned
@@ -96,6 +99,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun onErrorResponse(throwable: Throwable) {
         jokeContent.postValue(jokeContentEmpty)
-        alertObservable.onNext (AlertMessage("Ошибка: ${throwable.localizedMessage}", throwable))
+        viewSubscribers.forEach {
+            it.get()?.alertMessage(AlertMessage("Ошибка: ${throwable.localizedMessage}", throwable))
+        }
     }
 }
