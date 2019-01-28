@@ -99,8 +99,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun onErrorResponse(throwable: Throwable) {
         jokeContent.postValue(jokeContentEmpty)
-        viewSubscribers.forEach {
-            it.get()?.alertMessage(AlertMessage("Ошибка: ${throwable.localizedMessage}", throwable))
+        viewSubscribers.forEachSubscribers {
+            it.alertMessage(AlertMessage("Ошибка: ${throwable.localizedMessage}", throwable))
         }
     }
 }

@@ -10,11 +10,10 @@ import java.lang.ref.WeakReference
 
 open class WeakSubscriberArray <T> : ArrayList<WeakReference<T>>() {
     fun addSubscriber(subscriber: T) {
-        //TODO test
         val iterator = iterator()
         while (iterator.hasNext()) {
-            val observableObject = iterator.next()
-            when (observableObject.get()) {
+            val reference = iterator.next()
+            when (reference.get()) {
                 null -> iterator.remove()
                 subscriber -> return
             }
@@ -23,23 +22,36 @@ open class WeakSubscriberArray <T> : ArrayList<WeakReference<T>>() {
     }
 
     fun removeSubscriber(subscriber: T) {
-        //TODO test
         val iterator = iterator()
         while (iterator.hasNext()) {
-            val observableObject = iterator.next()
-            when (observableObject.get()) {
+            val reference = iterator.next()
+            when (reference.get()) {
                 subscriber, null -> iterator.remove()
             }
         }
     }
 
     fun clearEmptySubscribers() {
-        //TODO test
         val iterator = iterator()
         while (iterator.hasNext()) {
-            val observableObject = iterator.next()
-            if (observableObject.get() == null) {
+            val reference = iterator.next()
+            if (reference.get() == null) {
                 iterator.remove()
+            }
+        }
+    }
+
+    fun forEachSubscribers(action: (T) -> Unit) {
+        val iterator = iterator()
+        while (iterator.hasNext()) {
+            val reference = iterator.next()
+            val subscriber = reference.get()
+            if (subscriber == null) {
+                iterator.remove()
+            }
+            else
+            {
+                action(subscriber)
             }
         }
     }
