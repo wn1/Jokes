@@ -1,21 +1,18 @@
 package ru.qdev.kudashov.jokes.view.joke.content
 
-import android.app.AlertDialog
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ScrollView
 import androidx.databinding.DataBindingUtil
-import com.trello.rxlifecycle3.components.support.RxFragment
 import kotlinx.android.synthetic.main.main_fragment.*
-import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.R
 import ru.qdev.kudashov.jokes.databinding.MainFragmentBinding
 import ru.qdev.kudashov.jokes.ui.widget.ScrollViewExtended
+import ru.qdev.kudashov.jokes.view.BaseFragment
+import ru.qdev.kudashov.jokes.view.joke.list.JokeListFragment
 
-class MainFragment : RxFragment() , MainViewSubscriber {
+class MainFragment : BaseFragment(), MainViewSubscriber {
     companion object {
         fun newInstance() = MainFragment()
     }
@@ -26,6 +23,7 @@ class MainFragment : RxFragment() , MainViewSubscriber {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
         val binding: MainFragmentBinding = DataBindingUtil.inflate(layoutInflater, R.layout.main_fragment, container, false)
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding.jokeViewModel = viewModel
@@ -52,11 +50,19 @@ class MainFragment : RxFragment() , MainViewSubscriber {
         })
     }
 
-    override fun alertMessage(alertMessage: AlertMessage) {
-        AlertDialog.Builder(context)
-            .setMessage(alertMessage.message)
-            .setNegativeButton("Отмена", null)
-            .show()
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.main_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.jokesList) {
+            fragmentManager?.beginTransaction()
+                ?.addToBackStack(null)
+                ?.replace(R.id.container, JokeListFragment.newInstance())
+                ?.commit()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroyView() {

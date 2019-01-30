@@ -1,6 +1,7 @@
 package ru.qdev.kudashov.jokes.model.db
 
 import android.content.Context
+import android.database.Cursor
 import androidx.room.*
 import androidx.room.Database
 import io.reactivex.Flowable
@@ -31,6 +32,26 @@ class Joke {
 }
 
 typealias JokeList = List<Joke>
+
+
+class SQLQuery (val sql: String, val useTables : Array<String>, val convertToEntity: (Cursor) -> Joke){
+    companion object {
+        val allJokes = SQLQuery(
+            "SELECT id, content, dateUTC, link, nonUniqueId, isReading FROM joke",
+            arrayOf("joke")
+        ) {
+            val joke = Joke()
+            joke.id = it.getLong(0)
+            joke.content = it.getString(1)
+            joke.dateUTC = it.getLong(2)
+            joke.nonUniqueId = it.getString(4)
+            joke.isReading = it.getInt(5) != 0
+            joke
+        }
+    }
+
+}
+
 
 @Dao
 interface JokeDao {

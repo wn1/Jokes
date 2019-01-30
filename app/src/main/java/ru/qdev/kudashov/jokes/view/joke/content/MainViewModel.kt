@@ -18,10 +18,9 @@ import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
 import ru.qdev.kudashov.jokes.model.db.Joke
 import ru.qdev.kudashov.jokes.model.db.JokeList
 import ru.qdev.kudashov.jokes.model.repository.JokeRepository
+import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
 
-interface MainViewSubscriber {
-    fun alertMessage (alertMessage : AlertMessage)
-}
+interface MainViewSubscriber : AlertMessageSubscriber
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     val viewSubscribers = WeakSubscriberArray<MainViewSubscriber>()

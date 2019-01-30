@@ -11,11 +11,14 @@ import ru.qdev.kudashov.jokes.model.api.UmoriliService
 import ru.qdev.kudashov.jokes.model.db.Joke
 import ru.qdev.kudashov.jokes.model.db.JokeDb
 import ru.qdev.kudashov.jokes.model.db.JokeList
+import ru.qdev.kudashov.jokes.model.db.SQLQuery
+import ru.qdev.kudashov.jokes.model.db.RoomQueryAdapter
 import java.util.*
 
 class JokeRepository(val context: Context) {
     val updateInProgress  = ObservableBoolean(false)
-    val jokeDbDao = JokeDb.get(context).jokeDao()
+    val jokeDb = JokeDb.get(context)
+    val jokeDbDao = jokeDb.jokeDao()
 
     // From Api to Db mapping function
     fun UmoriliService.Joke.toDb() : Joke {
@@ -30,6 +33,14 @@ class JokeRepository(val context: Context) {
 
     fun getNewJoke() : Flowable<JokeList> {
         return jokeDbDao.getLastUnreadJoke()
+    }
+
+    fun createAllJokesQueryAdapter(): RoomQueryAdapter<Joke> {
+        return RoomQueryAdapter<Joke>(
+            jokeDb, SQLQuery.allJokes.sql,
+            SQLQuery.allJokes.useTables,
+            SQLQuery.allJokes.convertToEntity
+        )
     }
 
     fun setJokeIsReaded(joke: Joke) {
