@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.ui
+package ru.qdev.kudashov.jokes.ui.widget
 
 import android.annotation.TargetApi
 import android.content.Context

@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.main.ui
+package ru.qdev.kudashov.jokes.model.repository
 
 import android.content.Context
 import android.os.AsyncTask
@@ -7,8 +7,10 @@ import io.reactivex.Flowable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import ru.qdev.kudashov.jokes.db.*
-import ru.qdev.kudashov.jokes.UmoriliService
+import ru.qdev.kudashov.jokes.model.api.UmoriliService
+import ru.qdev.kudashov.jokes.model.db.Joke
+import ru.qdev.kudashov.jokes.model.db.JokeDb
+import ru.qdev.kudashov.jokes.model.db.JokeList
 import java.util.*
 
 class JokeRepository(val context: Context) {

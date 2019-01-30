@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes
+package ru.qdev.kudashov.jokes.model
 
 class AppSettings {
     companion object {

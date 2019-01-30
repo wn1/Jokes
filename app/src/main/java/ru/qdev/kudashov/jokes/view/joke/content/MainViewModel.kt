@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.main.ui
+package ru.qdev.kudashov.jokes.view.joke.content
 
 import android.app.Application
 import android.os.Build
@@ -13,10 +13,11 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import ru.qdev.kudashov.jokes.AlertMessage
+import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
-import ru.qdev.kudashov.jokes.db.Joke
-import ru.qdev.kudashov.jokes.db.JokeList
+import ru.qdev.kudashov.jokes.model.db.Joke
+import ru.qdev.kudashov.jokes.model.db.JokeList
+import ru.qdev.kudashov.jokes.model.repository.JokeRepository
 
 interface MainViewSubscriber {
     fun alertMessage (alertMessage : AlertMessage)
@@ -24,7 +25,8 @@ interface MainViewSubscriber {
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     val viewSubscribers = WeakSubscriberArray<MainViewSubscriber>()
-    private val jokeRepository: JokeRepository = JokeRepository(application)
+    private val jokeRepository: JokeRepository =
+        JokeRepository(application)
 
     private val jokeContentEmpty : Spanned
         get() = SpannableString ("И это будет что-то!")
@@ -100,7 +102,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun onErrorResponse(throwable: Throwable) {
         jokeContent.postValue(jokeContentEmpty)
         viewSubscribers.forEachSubscribers {
-            it.alertMessage(AlertMessage("Ошибка: ${throwable.localizedMessage}", throwable))
+            it.alertMessage(
+                AlertMessage(
+                    "Ошибка: ${throwable.localizedMessage}",
+                    throwable
+                )
+            )
         }
     }
 }

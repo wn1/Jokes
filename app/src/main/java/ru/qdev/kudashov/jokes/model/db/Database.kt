@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.db
+package ru.qdev.kudashov.jokes.model.db
 
 import android.content.Context
 import androidx.room.*
@@ -11,7 +11,9 @@ abstract class JokeDb : RoomDatabase() {
         val databaseName = "jokeBase"
 
         fun get (context: Context): JokeDb {
-            return Room.databaseBuilder(context, JokeDb::class.java, databaseName).build()
+            return Room.databaseBuilder(context, JokeDb::class.java,
+                databaseName
+            ).build()
         }
     }
     abstract fun jokeDao(): JokeDao
