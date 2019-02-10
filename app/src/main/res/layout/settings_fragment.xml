@@ -5,7 +5,6 @@
 
     <data>
         <variable name="settingsViewModel" type="ru.qdev.kudashov.jokes.view.joke.settings.SettingsViewModel"/>
-        <import type="Integer"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
@@ -29,7 +28,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:checked="true"
+                    android:checked="@{settingsViewModel.notificationEnable}"
             />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:text="0"/>
+                        android:text="@{settingsViewModel.notificationCount}"/>
             </com.google.android.material.textfield.TextInputLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
