@@ -68,4 +68,6 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
     implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
     implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'
+
+    implementation 'com.github.pwittchen:prefser-rx2:2.2.2'
 }

@@ -11,6 +11,7 @@ import ru.qdev.kudashov.jokes.databinding.MainFragmentBinding
 import ru.qdev.kudashov.jokes.ui.widget.ScrollViewExtended
 import ru.qdev.kudashov.jokes.view.BaseFragment
 import ru.qdev.kudashov.jokes.view.joke.list.JokeListFragment
+import ru.qdev.kudashov.jokes.view.joke.settings.SettingsFragment
 
 class MainFragment : BaseFragment(), MainViewSubscriber {
     companion object {
@@ -56,10 +57,14 @@ class MainFragment : BaseFragment(), MainViewSubscriber {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.jokesList) {
-            fragmentManager?.beginTransaction()
+        when (item.itemId ) {
+            R.id.jokesList -> fragmentManager?.beginTransaction()
                 ?.addToBackStack(null)
                 ?.replace(R.id.container, JokeListFragment.newInstance())
+                ?.commit()
+            R.id.settings -> fragmentManager?.beginTransaction()
+                ?.addToBackStack(null)
+                ?.replace(R.id.container, SettingsFragment.newInstance())
                 ?.commit()
         }
         return super.onOptionsItemSelected(item)
