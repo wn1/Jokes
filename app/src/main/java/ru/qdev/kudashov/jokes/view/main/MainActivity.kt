@@ -1,8 +1,9 @@
-package ru.qdev.kudashov.jokes.main.ui
+package ru.qdev.kudashov.jokes.view.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import ru.qdev.kudashov.jokes.R
+import ru.qdev.kudashov.jokes.view.joke.content.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
