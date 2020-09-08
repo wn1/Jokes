@@ -1,10 +1,10 @@
 package ru.qdev.kudashov.jokes.view
 
 import android.app.AlertDialog
-import androidx.fragment.app.Fragment
+import com.trello.rxlifecycle3.components.support.RxFragment
 import ru.qdev.kudashov.jokes.utils.AlertMessage
 
-open class BaseFragment : Fragment(), AlertMessageSubscriber {
+open class BaseRxFragment : RxFragment(), AlertMessageSubscriber {
     override fun alertMessage(alertMessage: AlertMessage) {
         AlertDialog.Builder(context)
             .setMessage(alertMessage.message)

@@ -1,5 +1,7 @@
 package ru.qdev.kudashov.jokes.view.joke.content
 
+import android.content.Intent
+import android.net.Uri
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
@@ -9,11 +11,10 @@ import kotlinx.android.synthetic.main.main_fragment.*
 import ru.qdev.kudashov.jokes.R
 import ru.qdev.kudashov.jokes.databinding.MainFragmentBinding
 import ru.qdev.kudashov.jokes.ui.widget.ScrollViewExtended
-import ru.qdev.kudashov.jokes.view.BaseFragment
+import ru.qdev.kudashov.jokes.view.BaseRxFragment
 import ru.qdev.kudashov.jokes.view.joke.list.JokeListFragment
-import ru.qdev.kudashov.jokes.view.joke.settings.SettingsFragment
 
-class MainFragment : BaseFragment(), MainViewSubscriber {
+class MainFragment : BaseRxFragment(), MainViewSubscriber {
     companion object {
         fun newInstance() = MainFragment()
     }
@@ -25,7 +26,12 @@ class MainFragment : BaseFragment(), MainViewSubscriber {
         savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
-        val binding: MainFragmentBinding = DataBindingUtil.inflate(layoutInflater, R.layout.main_fragment, container, false)
+        val binding: MainFragmentBinding = DataBindingUtil.inflate(
+            layoutInflater,
+            R.layout.main_fragment,
+            container,
+            false
+        )
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         binding.jokeViewModel = viewModel
         binding.setLifecycleOwner(this)
@@ -62,12 +68,16 @@ class MainFragment : BaseFragment(), MainViewSubscriber {
                 ?.addToBackStack(null)
                 ?.replace(R.id.container, JokeListFragment.newInstance())
                 ?.commit()
-            R.id.settings -> fragmentManager?.beginTransaction()
-                ?.addToBackStack(null)
-                ?.replace(R.id.container, SettingsFragment.newInstance())
-                ?.commit()
+            R.id.openWebUrl -> viewModel.openWebUrl()
+            R.id.umorili -> viewModel.openUmorili()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun openUri(uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setData(uri)
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

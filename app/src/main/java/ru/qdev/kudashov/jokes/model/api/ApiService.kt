@@ -16,6 +16,9 @@ interface UmoriliService {
         val baseUrl: String
             get() = "http://umorili.herokuapp.com/api/"
 
+        val wwwUrl: String
+            get() = "http://umori.li"
+
         fun create() : UmoriliService {
             val okHttpClient = OkHttpClient.Builder()
                 .addInterceptor(

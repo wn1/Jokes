@@ -1,6 +1,7 @@
 package ru.qdev.kudashov.jokes.view.joke.content
 
 import android.app.Application
+import android.net.Uri
 import android.os.Build
 import android.text.Html
 import android.text.SpannableString
@@ -13,6 +14,7 @@ import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import ru.qdev.kudashov.jokes.model.api.UmoriliService
 import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
 import ru.qdev.kudashov.jokes.model.db.Joke
@@ -20,9 +22,12 @@ import ru.qdev.kudashov.jokes.model.db.JokeList
 import ru.qdev.kudashov.jokes.model.repository.JokeRepository
 import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
 
-interface MainViewSubscriber : AlertMessageSubscriber
+interface MainViewSubscriber : AlertMessageSubscriber {
+    fun openUri(uri: Uri)
+}
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val context = application
     val viewSubscribers = WeakSubscriberArray<MainViewSubscriber>()
     private val jokeRepository: JokeRepository =
         JokeRepository(application)
@@ -63,6 +68,24 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         super.onCleared()
     }
 
+    fun openWebUrl() {
+        if (!lastJoke?.link.isNullOrEmpty()) {
+            viewSubscribers.forEachSubscribers {
+                it.openUri(Uri.parse(lastJoke?.link))
+            }
+        } else {
+            viewSubscribers.forEachSubscribers {
+                it.alertMessage(AlertMessage("Страница потерялась, почитайте что-то ещё"))
+            }
+        }
+    }
+
+    fun openUmorili() {
+        viewSubscribers.forEachSubscribers {
+            it.openUri(Uri.parse(UmoriliService.wwwUrl))
+        }
+    }
+
     fun getNewJoke() : Flowable<JokeList> {
         return jokeRepository.getNewJoke()
     }
@@ -93,7 +116,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             jokeRepository.updateLocal()
         }
 
-        if (!jokeRepository.updateInProgress.get()) { //ToDo to progress indicator change
+        if (!jokeRepository.updateInProgress.get()) {
             setContent(lastJoke?.content)
         }
     }
