@@ -8,6 +8,7 @@ import io.reactivex.Flowable
 
 @Database(entities = [Joke::class], version = 1)
 abstract class JokeDb : RoomDatabase() {
+
     companion object {
         val databaseName = "jokeBase"
 
@@ -17,6 +18,7 @@ abstract class JokeDb : RoomDatabase() {
             ).build()
         }
     }
+
     abstract fun jokeDao(): JokeDao
 }
 

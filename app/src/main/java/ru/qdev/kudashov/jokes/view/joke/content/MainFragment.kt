@@ -2,7 +2,7 @@ package ru.qdev.kudashov.jokes.view.joke.content
 
 import android.content.Intent
 import android.net.Uri
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.view.*
 import android.widget.ScrollView
@@ -32,7 +32,7 @@ class MainFragment : BaseRxFragment(), MainViewSubscriber {
             container,
             false
         )
-        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding.jokeViewModel = viewModel
         binding.setLifecycleOwner(this)
 
