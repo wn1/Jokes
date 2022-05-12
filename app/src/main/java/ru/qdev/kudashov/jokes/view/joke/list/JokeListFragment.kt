@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.joke_list_fragment.*
-import kotlinx.android.synthetic.main.joke_list_item.view.*
 import ru.qdev.kudashov.jokes.R
 import ru.qdev.kudashov.jokes.databinding.JokeListFragmentBinding
+import ru.qdev.kudashov.jokes.databinding.JokeListItemBinding
 import ru.qdev.kudashov.jokes.view.BaseFragment
 
 class JokeListFragment : BaseFragment() , JokeListViewSubscriber {
@@ -22,14 +21,18 @@ class JokeListFragment : BaseFragment() , JokeListViewSubscriber {
     }
 
     private lateinit var viewModel: JokeListViewModel
+    private lateinit var binding: JokeListFragmentBinding
 
-    class JokeListViewHolder(itemView : View): RecyclerView.ViewHolder(itemView) {
-        val content = itemView.content
+    class JokeListViewHolder(binding : JokeListItemBinding):
+        RecyclerView.ViewHolder(binding.root) {
+        val content = binding.content
     }
 
     val adapter = object : RecyclerView.Adapter<JokeListViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JokeListViewHolder {
-            return JokeListViewHolder(layoutInflater.inflate(R.layout.joke_list_item, parent, false))
+            val inflater = LayoutInflater.from(parent.context)
+            val binding = JokeListItemBinding.inflate(inflater, parent, false)
+            return JokeListViewHolder(binding)
         }
 
         override fun getItemCount(): Int {
@@ -51,8 +54,8 @@ class JokeListFragment : BaseFragment() , JokeListViewSubscriber {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding: JokeListFragmentBinding =
-            DataBindingUtil.inflate(layoutInflater, R.layout.joke_list_fragment, container, false)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.joke_list_fragment, container,
+            false)
         viewModel = ViewModelProviders.of(this).get(JokeListViewModel::class.java)
         binding.jokeViewModel = viewModel
         binding.setLifecycleOwner(this)
@@ -62,8 +65,8 @@ class JokeListFragment : BaseFragment() , JokeListViewSubscriber {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.recyclerView.adapter = adapter
     }
 
     override fun onJokeListChanged() {

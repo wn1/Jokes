@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ScrollView
 import androidx.databinding.DataBindingUtil
-import kotlinx.android.synthetic.main.main_fragment.*
 import ru.qdev.kudashov.jokes.R
 import ru.qdev.kudashov.jokes.databinding.MainFragmentBinding
 import ru.qdev.kudashov.jokes.ui.widget.ScrollViewExtended
@@ -19,14 +18,15 @@ class MainFragment : BaseRxFragment(), MainViewSubscriber {
         fun newInstance() = MainFragment()
     }
 
-    lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: MainViewModel
+    private lateinit var binding: MainFragmentBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
-        val binding: MainFragmentBinding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             layoutInflater,
             R.layout.main_fragment,
             container,
@@ -42,19 +42,29 @@ class MainFragment : BaseRxFragment(), MainViewSubscriber {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        scrollView.setOnScrollChangeSupportedListener(object : ScrollViewExtended.OnScrollChangeSupportListener {
-            override fun onScrollChange(v: View, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int) {
-                val scrollV = v as ScrollView
-                if (oldScrollY > scrollV.getChildAt(0).height - scrollV.height || oldScrollY < 0) return
+        binding.apply {
+            scrollView.setOnScrollChangeSupportedListener(object :
+                ScrollViewExtended.OnScrollChangeSupportListener {
+                override fun onScrollChange(
+                    v: View,
+                    scrollX: Int,
+                    scrollY: Int,
+                    oldScrollX: Int,
+                    oldScrollY: Int
+                ) {
+                    val scrollV = v as ScrollView
+                    if (oldScrollY > scrollV.getChildAt(0).height - scrollV.height
+                        || oldScrollY < 0) return
 
-                val deltaY = scrollY - oldScrollY
-                if (deltaY > 0 && floatingActionButton.visibility == View.VISIBLE) {
-                    floatingActionButton.hide()
-                } else if (deltaY < 0 && floatingActionButton.visibility != View.VISIBLE) {
-                    floatingActionButton.show()
+                    val deltaY = scrollY - oldScrollY
+                    if (deltaY > 0 && floatingActionButton.visibility == View.VISIBLE) {
+                        floatingActionButton.hide()
+                    } else if (deltaY < 0 && floatingActionButton.visibility != View.VISIBLE) {
+                        floatingActionButton.show()
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
