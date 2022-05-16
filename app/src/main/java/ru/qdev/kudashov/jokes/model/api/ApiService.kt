@@ -66,6 +66,7 @@ interface UmoriliService {
     @GET("random")
     fun randomJokeList(
         @Query("num") count: Int,
+        @Query("site") site: String?,
         @Query("name") name: String?
     ) : Single<JokeResponse>
 

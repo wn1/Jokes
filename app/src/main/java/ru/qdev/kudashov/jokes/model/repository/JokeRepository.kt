@@ -54,7 +54,11 @@ class JokeRepository(val context: Context) {
 
         randomJokeListDisposable?.dispose()
         randomJokeListDisposable =
-            UmoriliService.instance().randomJokeList(10, "new anekdot").map {
+            UmoriliService.instance().randomJokeList(
+                10,
+                "anekdot.ru",
+                "new anekdot"
+            ).map {
                     response ->
                 val jokes = response.map { it.toDb() }
                 jokeDbDao.insertNew(jokes)
