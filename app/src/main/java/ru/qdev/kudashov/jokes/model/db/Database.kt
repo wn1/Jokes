@@ -4,7 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import androidx.room.*
 import androidx.room.Database
-import io.reactivex.Flowable
+import io.reactivex.rxjava3.core.Flowable
 
 @Database(entities = [Joke::class], version = 1)
 abstract class JokeDb : RoomDatabase() {

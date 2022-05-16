@@ -10,10 +10,10 @@ import android.view.View
 import androidx.databinding.Observable
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.Flowable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.qdev.kudashov.jokes.model.api.UmoriliService
 import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
@@ -95,7 +95,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             jokeRepository.setJokeIsReaded(lastJoke!!)
         }
         else{
-            jokeRepository.updateLocal()
+            jokeRepository.updateLocalFromApi()
         }
     }
 
@@ -113,7 +113,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun onJokeResponse(jokeList: JokeList) {
         lastJoke = jokeList.firstOrNull()
         if (lastJoke == null) {
-            jokeRepository.updateLocal()
+            jokeRepository.updateLocalFromApi()
         }
 
         if (!jokeRepository.updateInProgress.get()) {

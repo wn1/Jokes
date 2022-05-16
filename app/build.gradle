@@ -9,7 +9,7 @@ android {
     compileSdkVersion 31
     defaultConfig {
         applicationId "ru.qdev.kudashov.jokes"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
@@ -32,6 +32,7 @@ android {
 
 dependencies {
     def room_version = "2.4.2"
+    def retrofitVersion = "2.9.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -48,12 +49,13 @@ dependencies {
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "androidx.room:room-rxjava3:$room_version"
 
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    //Rx
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation "io.reactivex.rxjava3:rxjava:3.1.4"
     implementation 'com.jakewharton.rxbinding3:rxbinding:3.0.0-alpha2'
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation 'com.google.android.material:material:1.1.0-alpha02'
 
     implementation 'com.trello.rxlifecycle3:rxlifecycle:3.0.0'
@@ -71,9 +73,13 @@ dependencies {
 // If you want to use Kotlin syntax with Android Lifecycle
     implementation 'com.trello.rxlifecycle3:rxlifecycle-android-lifecycle-kotlin:3.0.0'
 
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    //Retrofit, okhttp
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+    implementation 'com.localebro:okhttpprofiler:1.0.8'
+
     implementation 'androidx.recyclerview:recyclerview:1.0.0-rc02'
 
     implementation 'com.github.pwittchen:prefser-rx2:2.2.2'
