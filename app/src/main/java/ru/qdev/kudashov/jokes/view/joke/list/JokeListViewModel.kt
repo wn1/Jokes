@@ -35,6 +35,7 @@ class JokeListViewModel(application: Application) : AndroidViewModel(application
 
     override fun onCleared() {
         allJokesQueryAdapter.changeSubscribers.removeSubscriber(this)
+        jokeRepository.clear()
         super.onCleared()
     }
 }

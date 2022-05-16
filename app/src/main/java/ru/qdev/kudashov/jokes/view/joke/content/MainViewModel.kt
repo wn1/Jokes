@@ -65,6 +65,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         newJokeDisposable?.dispose()
 
         jokeRepository.updateInProgress.removeOnPropertyChangedCallback(updateInProgressCallback)
+        jokeRepository.clear()
         super.onCleared()
     }
 

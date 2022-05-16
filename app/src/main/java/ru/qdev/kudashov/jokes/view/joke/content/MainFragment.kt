@@ -10,10 +10,10 @@ import androidx.databinding.DataBindingUtil
 import ru.qdev.kudashov.jokes.R
 import ru.qdev.kudashov.jokes.databinding.MainFragmentBinding
 import ru.qdev.kudashov.jokes.ui.widget.ScrollViewExtended
-import ru.qdev.kudashov.jokes.view.BaseRxFragment
+import ru.qdev.kudashov.jokes.view.BaseFragment
 import ru.qdev.kudashov.jokes.view.joke.list.JokeListFragment
 
-class MainFragment : BaseRxFragment(), MainViewSubscriber {
+class MainFragment : BaseFragment(), MainViewSubscriber {
     companion object {
         fun newInstance() = MainFragment()
     }
