@@ -15,9 +15,13 @@ import java.util.*
 
 class JokeRepository(val context: Context) {
     val updateInProgress  = ObservableBoolean(false)
-    val jokeDb = JokeDb.get(context)
-    val jokeDbDao = jokeDb.jokeDao()
-    var randomJokeListDisposable: Disposable? = null
+
+    private val jokeDb = JokeDb.get(context)
+    private val jokeDbDao = jokeDb.jokeDao()
+    private var randomJokeListDisposable: Disposable? = null
+
+    private val filterSite = "anekdot.ru"
+    private val filterNameChanel = "new anekdot"
 
     // From Api to Db mapping function
     fun UmoriliService.Joke.toDb() : Joke {
@@ -56,11 +60,14 @@ class JokeRepository(val context: Context) {
         randomJokeListDisposable =
             UmoriliService.instance().randomJokeList(
                 10,
-                "anekdot.ru",
-                "new anekdot"
+                filterSite,
+                filterNameChanel
             ).map {
                     response ->
-                val jokes = response.map { it.toDb() }
+                val filtered = response.filter {
+                    it.site == filterSite && it.name == filterNameChanel
+                }
+                val jokes = filtered.map { it.toDb() }
                 jokeDbDao.insertNew(jokes)
         }.subscribe { result, error ->
             updateInProgress.set(false)
