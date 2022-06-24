@@ -8,10 +8,10 @@ import io.reactivex.rxjava3.disposables.Disposable
 import ru.qdev.kudashov.jokes.api.UmoriliService
 import ru.qdev.kudashov.jokes.mapping.toDb
 import ru.qdev.kudashov.jokes.db.JokeDb
-import ru.qdev.kudashov.jokes.db.JokeList
-import ru.qdev.kudashov.jokes.db.SQLQuery
 import ru.qdev.kudashov.jokes.db.RoomQueryAdapter
+import ru.qdev.kudashov.jokes.db.dao.JokeDbEntryList
 import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
+import ru.qdev.kudashov.jokes.db.query.AllJokes
 
 class JokeRepository(val context: Context) {
     val updateInProgress  = ObservableBoolean(false)
@@ -23,15 +23,15 @@ class JokeRepository(val context: Context) {
     private val filterSite = "anekdot.ru"
     private val filterNameChanel = "new anekdot"
 
-    fun getNewJoke() : Flowable<JokeList> {
+    fun getNewJoke() : Flowable<JokeDbEntryList> {
         return jokeDbDao.getLastUnreadJoke()
     }
 
     fun createAllJokesQueryAdapter(): RoomQueryAdapter<JokeDbEntry> {
-        return RoomQueryAdapter<JokeDbEntry>(
-            jokeDb, SQLQuery.allJokes.sql,
-            SQLQuery.allJokes.useTables,
-            SQLQuery.allJokes.convertToEntity
+        return RoomQueryAdapter(
+            jokeDb, AllJokes.query.sql,
+            AllJokes.query.useTables,
+            AllJokes.query.convertToEntity
         )
     }
 

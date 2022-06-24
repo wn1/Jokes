@@ -15,9 +15,9 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.qdev.kudashov.jokes.api.UmoriliService
+import ru.qdev.kudashov.jokes.db.dao.JokeDbEntryList
 import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
-import ru.qdev.kudashov.jokes.db.JokeList
 import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
 import ru.qdev.kudashov.jokes.repository.JokeRepository
 import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
@@ -87,7 +87,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getNewJoke() : Flowable<JokeList> {
+    fun getNewJoke() : Flowable<JokeDbEntryList> {
         return jokeRepository.getNewJoke()
     }
 
@@ -111,7 +111,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun onJokeResponse(jokeList: JokeList) {
+    private fun onJokeResponse(jokeList: JokeDbEntryList) {
         lastJoke = jokeList.firstOrNull()
         if (lastJoke == null) {
             jokeRepository.updateLocalFromApi()
