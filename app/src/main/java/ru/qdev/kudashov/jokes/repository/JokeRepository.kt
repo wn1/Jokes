@@ -1,17 +1,17 @@
-package ru.qdev.kudashov.jokes.model.repository
+package ru.qdev.kudashov.jokes.repository
 
 import android.content.Context
 import android.os.AsyncTask
 import androidx.databinding.ObservableBoolean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.Disposable
-import ru.qdev.kudashov.jokes.model.api.UmoriliService
-import ru.qdev.kudashov.jokes.model.db.Joke
+import ru.qdev.kudashov.jokes.api.UmoriliService
+import ru.qdev.kudashov.jokes.mapping.toDb
 import ru.qdev.kudashov.jokes.model.db.JokeDb
 import ru.qdev.kudashov.jokes.model.db.JokeList
 import ru.qdev.kudashov.jokes.model.db.SQLQuery
 import ru.qdev.kudashov.jokes.model.db.RoomQueryAdapter
-import java.util.*
+import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
 
 class JokeRepository(val context: Context) {
     val updateInProgress  = ObservableBoolean(false)
@@ -23,30 +23,19 @@ class JokeRepository(val context: Context) {
     private val filterSite = "anekdot.ru"
     private val filterNameChanel = "new anekdot"
 
-    // From Api to Db mapping function
-    fun UmoriliService.Joke.toDb() : Joke {
-        val result = Joke()
-//        result.content = this.desc ?: "А нет тут ничего!" //ToDo need description field add
-        result.content = this.elementPureHtml ?: "А нет тут ничего!"
-        result.dateUTC = Date().time
-        result.link = this.link ?: ""
-        result.nonUniqueId = this.link ?: ""
-        return result
-    }
-
     fun getNewJoke() : Flowable<JokeList> {
         return jokeDbDao.getLastUnreadJoke()
     }
 
-    fun createAllJokesQueryAdapter(): RoomQueryAdapter<Joke> {
-        return RoomQueryAdapter<Joke>(
+    fun createAllJokesQueryAdapter(): RoomQueryAdapter<JokeDbEntry> {
+        return RoomQueryAdapter<JokeDbEntry>(
             jokeDb, SQLQuery.allJokes.sql,
             SQLQuery.allJokes.useTables,
             SQLQuery.allJokes.convertToEntity
         )
     }
 
-    fun setJokeIsReaded(joke: Joke) {
+    fun setJokeIsReaded(joke: JokeDbEntry) {
         AsyncTask.execute {
             joke.isReading = true
             jokeDbDao.update(joke)

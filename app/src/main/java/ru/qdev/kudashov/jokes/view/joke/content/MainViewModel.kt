@@ -14,12 +14,12 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import ru.qdev.kudashov.jokes.model.api.UmoriliService
+import ru.qdev.kudashov.jokes.api.UmoriliService
 import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
-import ru.qdev.kudashov.jokes.model.db.Joke
 import ru.qdev.kudashov.jokes.model.db.JokeList
-import ru.qdev.kudashov.jokes.model.repository.JokeRepository
+import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
+import ru.qdev.kudashov.jokes.repository.JokeRepository
 import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
 
 interface MainViewSubscriber : AlertMessageSubscriber {
@@ -36,7 +36,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = SpannableString ("И это будет что-то!")
 
     val jokeContent = MutableLiveData<Spanned> (jokeContentEmpty)
-    private var lastJoke: Joke? = null
+    private var lastJoke: JokeDbEntry? = null
     private var newJokeDisposable: Disposable? = null
 
     private var updateInProgressCallback = object : Observable.OnPropertyChangedCallback() {

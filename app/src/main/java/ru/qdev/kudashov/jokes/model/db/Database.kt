@@ -5,8 +5,9 @@ import android.database.Cursor
 import androidx.room.*
 import androidx.room.Database
 import io.reactivex.rxjava3.core.Flowable
+import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
 
-@Database(entities = [Joke::class], version = 1)
+@Database(entities = [JokeDbEntry::class], version = 1)
 abstract class JokeDb : RoomDatabase() {
 
     companion object {
@@ -22,27 +23,18 @@ abstract class JokeDb : RoomDatabase() {
     abstract fun jokeDao(): JokeDao
 }
 
-@Entity
-class Joke {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-    var content: String = ""
-    var dateUTC: Long = 0
-    var link: String = ""
-    var nonUniqueId: String = ""
-    var isReading: Boolean = false
-}
-
-typealias JokeList = List<Joke>
 
 
-class SQLQuery (val sql: String, val useTables : Array<String>, val convertToEntity: (Cursor) -> Joke){
+typealias JokeList = List<JokeDbEntry>
+
+
+class SQLQuery (val sql: String, val useTables : Array<String>, val convertToEntity: (Cursor) -> JokeDbEntry){
     companion object {
         val allJokes = SQLQuery(
             "SELECT id, content, dateUTC, link, nonUniqueId, isReading FROM joke",
             arrayOf("joke")
         ) {
-            val joke = Joke()
+            val joke = JokeDbEntry()
             joke.id = it.getLong(0)
             joke.content = it.getString(1)
             joke.dateUTC = it.getLong(2)
@@ -67,13 +59,13 @@ interface JokeDao {
     fun getRepeatJoke(nonUniqueID: String, content: String) : JokeList //JokeList to maybe return empty result
 
     @Insert
-    fun insert(joke: Joke)
+    fun insert(joke: JokeDbEntry)
 
     @Insert()
-    fun insert(jokes: List<Joke>)
+    fun insert(jokes: List<JokeDbEntry>)
 
     @Transaction
-    fun insertNew(jokes: List<Joke>) {
+    fun insertNew(jokes: List<JokeDbEntry>) {
         for (joke in jokes) {
             if (getRepeatJoke(joke.nonUniqueId, joke.content).isEmpty()) {
                 insert(joke)
@@ -82,7 +74,7 @@ interface JokeDao {
     }
 
     @Update
-    fun update(joke: Joke)
+    fun update(joke: JokeDbEntry)
 
     @Query("DELETE FROM joke WHERE dateUTC < :dateUTC")
     fun deleteBefore(dateUTC: Long)

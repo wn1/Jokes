@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.model.api
+package ru.qdev.kudashov.jokes.api
 
 import com.localebro.okhttpprofiler.OkHttpProfilerInterceptor
 import io.reactivex.rxjava3.core.Single
@@ -12,6 +12,7 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Query
 import ru.qdev.kudashov.jokes.BuildConfig
+import ru.qdev.kudashov.jokes.api.model.JokeApiModel
 
 interface UmoriliService {
     companion object {
@@ -53,15 +54,7 @@ interface UmoriliService {
         }
     }
 
-    class Joke {
-        var site: String? = ""
-        var name: String? = ""
-        var desc: String? = ""
-        var link: String? = ""
-        var elementPureHtml: String? = ""
-    }
-
-    class JokeResponse : ArrayList<Joke>()
+    class JokeResponse : ArrayList<JokeApiModel>()
 
     @GET("random")
     fun randomJokeList(
