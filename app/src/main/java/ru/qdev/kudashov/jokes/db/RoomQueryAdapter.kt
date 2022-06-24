@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.model.db
+package ru.qdev.kudashov.jokes.db
 
 import android.database.Cursor
 import android.database.DataSetObserver

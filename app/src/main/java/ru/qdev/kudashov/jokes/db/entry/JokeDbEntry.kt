@@ -1,4 +1,4 @@
-package ru.qdev.kudashov.jokes.model.db.entry
+package ru.qdev.kudashov.jokes.db.entry
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

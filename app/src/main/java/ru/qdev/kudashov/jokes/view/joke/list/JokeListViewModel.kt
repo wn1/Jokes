@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import ru.qdev.kudashov.jokes.repository.JokeRepository
-import ru.qdev.kudashov.jokes.model.db.RoomQueryAdapter
+import ru.qdev.kudashov.jokes.db.RoomQueryAdapter
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
 import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
 

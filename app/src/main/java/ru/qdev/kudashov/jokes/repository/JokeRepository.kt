@@ -7,11 +7,11 @@ import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.disposables.Disposable
 import ru.qdev.kudashov.jokes.api.UmoriliService
 import ru.qdev.kudashov.jokes.mapping.toDb
-import ru.qdev.kudashov.jokes.model.db.JokeDb
-import ru.qdev.kudashov.jokes.model.db.JokeList
-import ru.qdev.kudashov.jokes.model.db.SQLQuery
-import ru.qdev.kudashov.jokes.model.db.RoomQueryAdapter
-import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
+import ru.qdev.kudashov.jokes.db.JokeDb
+import ru.qdev.kudashov.jokes.db.JokeList
+import ru.qdev.kudashov.jokes.db.SQLQuery
+import ru.qdev.kudashov.jokes.db.RoomQueryAdapter
+import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
 
 class JokeRepository(val context: Context) {
     val updateInProgress  = ObservableBoolean(false)

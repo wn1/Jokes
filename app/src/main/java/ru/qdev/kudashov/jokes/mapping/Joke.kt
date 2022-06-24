@@ -1,7 +1,7 @@
 package ru.qdev.kudashov.jokes.mapping
 
 import ru.qdev.kudashov.jokes.api.model.JokeApiModel
-import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
+import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
 import java.util.*
 
 // From Api to Db mapping function

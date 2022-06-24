@@ -1,11 +1,11 @@
-package ru.qdev.kudashov.jokes.model.db
+package ru.qdev.kudashov.jokes.db
 
 import android.content.Context
 import android.database.Cursor
 import androidx.room.*
 import androidx.room.Database
 import io.reactivex.rxjava3.core.Flowable
-import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
+import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
 
 @Database(entities = [JokeDbEntry::class], version = 1)
 abstract class JokeDb : RoomDatabase() {

@@ -17,8 +17,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.qdev.kudashov.jokes.api.UmoriliService
 import ru.qdev.kudashov.jokes.utils.AlertMessage
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
-import ru.qdev.kudashov.jokes.model.db.JokeList
-import ru.qdev.kudashov.jokes.model.db.entry.JokeDbEntry
+import ru.qdev.kudashov.jokes.db.JokeList
+import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
 import ru.qdev.kudashov.jokes.repository.JokeRepository
 import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
 
