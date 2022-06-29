@@ -67,6 +67,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
     implementation 'com.localebro:okhttpprofiler:1.0.8'
 
-    
+
     implementation 'com.github.pwittchen:prefser-rx2:2.2.2'
 }

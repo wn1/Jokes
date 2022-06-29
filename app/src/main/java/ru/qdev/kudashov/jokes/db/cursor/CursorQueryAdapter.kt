@@ -2,6 +2,7 @@ package ru.qdev.kudashov.jokes.db.cursor
 
 import android.database.Cursor
 import android.database.DataSetObserver
+import android.util.Log
 import androidx.room.InvalidationTracker
 import androidx.room.RoomDatabase
 import io.reactivex.rxjava3.core.Single
@@ -53,7 +54,11 @@ class CursorQueryAdapter<T_entity> (
                 changeSubscribers.forEachSubscribers { it.onChanged(cursor) }
             }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe { _, e ->
+                if (e != null) {
+                    Log.e(javaClass.simpleName, "Error: ${e.message}")
+                }
+            }
     }
 
     init {
@@ -83,5 +88,4 @@ class CursorQueryAdapter<T_entity> (
         cursor?.unregisterDataSetObserver(dataSetObserver)
         database.invalidationTracker.removeObserver(tablesObserver)
     }
-
 }

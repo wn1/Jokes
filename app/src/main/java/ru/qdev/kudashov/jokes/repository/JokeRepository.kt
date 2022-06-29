@@ -1,6 +1,7 @@
 package ru.qdev.kudashov.jokes.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.databinding.ObservableBoolean
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Single
@@ -39,7 +40,11 @@ class JokeRepository(val context: Context) {
                 jokeDbDao.update(joke)
             }
             .subscribeOn(Schedulers.io())
-            .subscribe()
+            .subscribe { _, e ->
+                if (e != null) {
+                    Log.e(javaClass.simpleName, "Error: ${e.message}")
+                }
+            }
     }
 
     fun updateLocalFromApi() {
