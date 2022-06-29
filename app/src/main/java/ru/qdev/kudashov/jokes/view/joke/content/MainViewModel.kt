@@ -93,7 +93,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onClickFloatingActionButton(view: View) {
         if (lastJoke!=null) {
-            jokeRepository.setJokeIsReaded(lastJoke!!)
+            jokeRepository.setJokeIsReadied(lastJoke!!)
         }
         else{
             jokeRepository.updateLocalFromApi()

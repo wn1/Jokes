@@ -1,10 +1,11 @@
 package ru.qdev.kudashov.jokes.repository
 
 import android.content.Context
-import android.os.AsyncTask
 import androidx.databinding.ObservableBoolean
 import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.qdev.kudashov.jokes.api.UmoriliService
 import ru.qdev.kudashov.jokes.mapping.toDb
 import ru.qdev.kudashov.jokes.db.JokeDb
@@ -31,11 +32,14 @@ class JokeRepository(val context: Context) {
         return CursorQueryAdapter(jokeDb, AllJokes.query)
     }
 
-    fun setJokeIsReaded(joke: JokeDbEntry) {
-        AsyncTask.execute {
-            joke.isReading = true
-            jokeDbDao.update(joke)
-        }
+    fun setJokeIsReadied(joke: JokeDbEntry) {
+        Single
+            .fromCallable {
+                joke.isReading = true
+                jokeDbDao.update(joke)
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     fun updateLocalFromApi() {
