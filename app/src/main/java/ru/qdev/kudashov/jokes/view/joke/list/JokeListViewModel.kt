@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import ru.qdev.kudashov.jokes.repository.JokeRepository
-import ru.qdev.kudashov.jokes.db.RoomQueryAdapter
+import ru.qdev.kudashov.jokes.db.cursor.CursorQueryAdapter
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
 import ru.qdev.kudashov.jokes.view.AlertMessageSubscriber
 
@@ -14,7 +14,7 @@ interface JokeListViewSubscriber : AlertMessageSubscriber {
     fun onJokeListChanged()
 }
 
-class JokeListViewModel(application: Application) : AndroidViewModel(application), RoomQueryAdapter.ChangeNotify {
+class JokeListViewModel(application: Application) : AndroidViewModel(application), CursorQueryAdapter.ChangeNotify {
 
     val viewSubscribers = WeakSubscriberArray<JokeListViewSubscriber>()
 

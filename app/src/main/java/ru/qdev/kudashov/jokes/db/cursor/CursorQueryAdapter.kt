@@ -1,14 +1,17 @@
-package ru.qdev.kudashov.jokes.db
+package ru.qdev.kudashov.jokes.db.cursor
 
 import android.database.Cursor
 import android.database.DataSetObserver
-import android.os.AsyncTask
 import androidx.room.InvalidationTracker
 import androidx.room.RoomDatabase
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import ru.qdev.kudashov.jokes.utils.WeakSubscriberArray
 
-class RoomQueryAdapter<T_entity> (val database: RoomDatabase, val query: String, val useTables: Array<String>,
-                                           val convertToEntity: (Cursor) -> T_entity, val args: Array<Any>? = null) {
+class CursorQueryAdapter<T_entity> (
+    private val database: RoomDatabase,
+    private val query: CursorQuery<T_entity>
+    ) {
 
     interface ChangeNotify {
         fun onChanged(cursor: Cursor?)
@@ -22,7 +25,7 @@ class RoomQueryAdapter<T_entity> (val database: RoomDatabase, val query: String,
     val count: Int
         get() = cursor?.count ?: 0
 
-    private val tablesObserver = object : InvalidationTracker.Observer( useTables) {
+    private val tablesObserver = object : InvalidationTracker.Observer(query.useTables) {
         override fun onInvalidated(tables: MutableSet<String>) {
             updateCursor()
         }
@@ -41,13 +44,16 @@ class RoomQueryAdapter<T_entity> (val database: RoomDatabase, val query: String,
     }
 
     fun updateCursor(){
-        AsyncTask.execute {
-            cursor?.unregisterDataSetObserver(dataSetObserver)
-            database.invalidationTracker.addObserver(tablesObserver)
-            cursor = database.query(query, args)
-            cursor?.registerDataSetObserver(dataSetObserver)
-            changeSubscribers.forEachSubscribers { it.onChanged(cursor) }
-        }
+        Single
+            .fromCallable {
+                cursor?.unregisterDataSetObserver(dataSetObserver)
+                database.invalidationTracker.addObserver(tablesObserver)
+                cursor = database.query(query.sql, query.args)
+                cursor?.registerDataSetObserver(dataSetObserver)
+                changeSubscribers.forEachSubscribers { it.onChanged(cursor) }
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribe()
     }
 
     init {
@@ -65,7 +71,7 @@ class RoomQueryAdapter<T_entity> (val database: RoomDatabase, val query: String,
             return null
         }
 
-        return convertToEntity(cursor!!)
+        return query.convertToEntity(cursor!!)
     }
 
 

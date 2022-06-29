@@ -16,7 +16,7 @@ import ru.qdev.kudashov.jokes.api.model.JokeApiModel
 
 interface UmoriliService {
     companion object {
-        val baseUrl: String
+        private val baseUrl: String
             get() = "http://umorili.herokuapp.com/api/"
 
         val wwwUrl: String
@@ -64,5 +64,5 @@ interface UmoriliService {
     ) : Single<JokeResponse>
 
     @GET("random?num=10")
-    fun randomJokeCall() : Call<JokeResponse>
+    fun randomJokeCall() : Single<JokeResponse>
 }

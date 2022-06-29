@@ -1,12 +1,14 @@
-package ru.qdev.kudashov.jokes.db.query
+package ru.qdev.kudashov.jokes.db.cursor.query
 
+import ru.qdev.kudashov.jokes.db.cursor.CursorQuery
 import ru.qdev.kudashov.jokes.db.entry.JokeDbEntry
 
 class AllJokes {
     companion object {
-        val query = SQLQuery(
-            "SELECT id, content, dateUTC, link, nonUniqueId, isReading FROM joke",
-            arrayOf("joke")
+        val query = CursorQuery(
+            sql ="SELECT id, content, dateUTC, link, nonUniqueId, isReading FROM joke",
+            args = null,
+            useTables = arrayOf("joke")
         ) {
             val joke = JokeDbEntry()
             joke.id = it.getLong(0)
